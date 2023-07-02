@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_builder/responsive_builder.dart';
-import 'package:stegano/app/app.bottomsheets.dart';
-import 'package:stegano/app/app.dialogs.dart';
-import 'package:stegano/app/app.locator.dart';
-import 'package:stegano/app/app.router.dart';
-import 'package:url_strategy/url_strategy.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:stegano/ui/create_account.dart';
+import 'package:stegano/ui/decode_image.dart';
+import 'package:stegano/ui/encode_image.dart';
+import 'package:stegano/ui/home_screen.dart';
+import 'package:stegano/utils/colors.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setPathUrlStrategy();
-  await setupLocator(stackedRouter: stackedRouter);
-  setupDialogUi();
-  setupBottomSheetUi();
   runApp(const MainApp());
 }
 
@@ -21,14 +15,30 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveApp(
-      builder: (_) => MaterialApp.router(
-        routerDelegate: stackedRouter.delegate(),
-        routeInformationParser: stackedRouter.defaultRouteParser(),
+    return MaterialApp(
+      title: "Stegano",
+      theme: ThemeData(
+        fontFamily: "BasierCircle",
+        primaryColor: kPrimaryColor,
+        scaffoldBackgroundColor: Colors.black, // Set the default background color as black
+        textTheme: const TextTheme(
+
+          bodyLarge: TextStyle(color: Colors.white), // Set the default text color as white
+          bodyMedium: TextStyle(color: Colors.white),
+          bodySmall: TextStyle(color: Colors.white),
+          // You can customize other text styles as needed
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent, // Set your default color here
+        ),
       ),
-    ).animate().fadeIn(
-          delay: const Duration(milliseconds: 50),
-          duration: const Duration(milliseconds: 400),
-        );
+      initialRoute: '/',
+      routes: {
+        '/signup': (context) => CreateAccount(toEncode: ModalRoute.of(context)?.settings.arguments as bool?),
+        '/encode': (context) => const EncodeImage(),
+        '/decode': (context) => const DecodeImage(),
+      },
+      home: const HomeScreen(),
+    );
   }
 }
