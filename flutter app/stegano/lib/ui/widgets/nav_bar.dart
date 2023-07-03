@@ -73,19 +73,7 @@ class _NavBarState extends State<NavBar> {
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           const Spacer(),
-          const NavBarText(text: "How it works?"),
-          const SizedBox(width: 20),
-          const NavBarText(text: "About"),
-          const SizedBox(width: 20),
-          const NavBarText(text: "Contact"),
-          const SizedBox(width: 20),
-          const NavBarText(text: "Github"),
-          const SizedBox(width: 40),
-          ButtonWithIcon(
-            text: Text("Login", style: navBarTextStyle),
-            onTap: () {},
-            padding: 20,
-          )
+          ...navBarTexts()
         ],
       ),
     );

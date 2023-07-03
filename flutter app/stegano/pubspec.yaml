@@ -19,6 +19,7 @@ dependencies:
   dio: ^5.0.1
   cached_network_image: ^3.2.3
   lottie: ^2.3.2
+  image_picker: ^1.0.0
 #  flutter_native_splash: ^2.2.19
 
 dev_dependencies:

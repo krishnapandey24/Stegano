@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -76,8 +75,7 @@ class _CreateAccountState extends State<CreateAccount> {
           ),
           const SizedBox(height: 50),
           Container(
-            margin:
-                EdgeInsets.symmetric(horizontal: isWeb ? (width! * 0.35) : 50),
+            margin: EdgeInsets.symmetric(horizontal: isWeb ? (width! * 0.35) : 50),
             child: buildCreateAccountForm(isWeb),
           )
         ],
@@ -161,7 +159,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 if (_formKey.currentState!.validate()) {
                   String email = _emailController.text;
                   String password = _passwordController.text;
-
+                  print("$email $password");
                   if (forSignUp) {
                   } else {}
                   _emailController.clear();
