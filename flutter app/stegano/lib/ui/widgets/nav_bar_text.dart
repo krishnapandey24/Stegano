@@ -27,9 +27,7 @@ class _NavBarTextState extends State<NavBarText> {
         _color = Colors.white;
       }),
       child: GestureDetector(
-        onTap: (){
-          print("hello");
-        },
+        onTap: (){},
         child: Text(
           widget.text,
           style:
@@ -38,4 +36,5 @@ class _NavBarTextState extends State<NavBarText> {
       ),
     );
   }
+
 }

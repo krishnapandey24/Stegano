@@ -1,12 +1,11 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Appt {
   static bool isValidPassword(String password) {
+    if(password.length>30) return true;
     return password.length > 7 &&
         password.length < 128 &&
         password.contains(RegExp(r'[a-z]')) &&

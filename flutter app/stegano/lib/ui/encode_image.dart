@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:stegano/ui/encode_download.dart';
 import 'package:stegano/ui/widgets/image_picker_container.dart';
 import 'package:stegano/ui/widgets/nav_bar.dart';
 import 'dart:io';
@@ -23,12 +24,9 @@ class _EncodeImageState extends State<EncodeImage> {
   final textController = TextEditingController();
   final encryptionKeyController = TextEditingController();
   bool encryptMessage = false;
+  bool imageEncoded= false;
+  Uint8List? encodedImageBytes;
 
-  @override
-  void initState() {
-    super.initState();
-    // TODO add condition to return user if not logged in
-  }
 
   @override
   void dispose() {
@@ -56,12 +54,18 @@ class _EncodeImageState extends State<EncodeImage> {
   }
 
   mainContainer(bool isWeb) {
-    return imageSelected
-        ? imageSelectedLayout(isWeb)
-        : ImagePickerContainer(
-            setState: setImage,
-            isWeb: isWeb,
-          );
+    if(imageEncoded){
+      return EncodeDownload(isWeb: isWeb, setState: setImage, fileBytes: encodedImageBytes!);
+    }else{
+      return imageSelected
+          ? imageSelectedLayout(isWeb)
+          : ImagePickerContainer(
+        setState: setImage,
+        isWeb: isWeb,
+        forEncoding: true,
+      );
+    }
+
   }
 
   void setImage(Object image) {
@@ -81,6 +85,8 @@ class _EncodeImageState extends State<EncodeImage> {
     }
     setState(() {
       imageSelected = true;
+      imageEncoded=false;
+      encodedImageBytes=null;
     });
   }
 

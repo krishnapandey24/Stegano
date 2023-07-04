@@ -74,10 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () => Navigator.of(context, rootNavigator: true)
-                    .pushNamed(
-                        WebLoginUtils.isLoggedIn() ? '/encode' : '/signup',
-                        arguments: true),
+                onTap: () => Navigator.of(context, rootNavigator: true).pushNamed(WebLoginUtils.isLoggedIn() ? '/encode' : '/signup', arguments: true),
               ),
               const SizedBox(width: 20),
               ButtonWithIcon(

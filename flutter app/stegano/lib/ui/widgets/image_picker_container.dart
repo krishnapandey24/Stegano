@@ -7,21 +7,22 @@ import '../../utils/constants.dart';
 class ImagePickerContainer extends StatelessWidget {
   final Function(Object image) setState;
   final bool isWeb;
+  final bool forEncoding;
 
   const ImagePickerContainer(
-      {super.key, required this.setState, required this.isWeb});
+      {super.key, required this.setState, required this.isWeb, required this.forEncoding});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: isWeb ? (width! * 0.32) : 50),
+      margin: EdgeInsets.symmetric(horizontal: isWeb ? (width! * (forEncoding ? 0.32 : 0.29)) : 50),
       child: Column(
         children: [
           const SizedBox(height: 20),
-          const Text(
-            "Upload your image to hide text in it",
+          Text(
+            "Upload your image to ${forEncoding ? "hide text in it": "decode it"}",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 50),
           Container(
@@ -70,7 +71,7 @@ class ImagePickerContainer extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  "Drop files here. 20 MB maximum file size",
+                  "Drop files here. 10 MB maximum file size",
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 50),
