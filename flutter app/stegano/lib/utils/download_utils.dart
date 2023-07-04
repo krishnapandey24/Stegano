@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'dart:html';
 import 'dart:typed_data';
+import "package:universal_html/html.dart";
+
 
 class DownloadUtils{
 
