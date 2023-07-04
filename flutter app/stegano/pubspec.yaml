@@ -21,6 +21,7 @@ dependencies:
   lottie: ^2.3.2
   image_picker: ^1.0.0
   path_provider: ^2.0.15
+  fluttertoast: ^8.2.2
 #  flutter_native_splash: ^2.2.19
 
 dev_dependencies:

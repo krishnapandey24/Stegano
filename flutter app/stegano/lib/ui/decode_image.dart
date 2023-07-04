@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:stegano/ui/widgets/image_picker_container.dart';
 import 'package:stegano/ui/widgets/nav_bar.dart';
@@ -23,7 +24,7 @@ class _DecodeImageState extends State<DecodeImage> {
   final encryptionKeyController = TextEditingController();
   bool messageIsEncrypted = false;
   bool imageEncoded = false;
-  Uint8List? encodedImageBytes;
+  Uint8List? encodedTextFileBytes;
   String decodedText = subDescription * 10;
 
   @override
@@ -48,10 +49,10 @@ class _DecodeImageState extends State<DecodeImage> {
     return imageSelected
         ? imageSelectedLayout(isWeb)
         : ImagePickerContainer(
-      setState: setImage,
-      isWeb: isWeb,
-      forEncoding: false,
-    );
+            setState: setImage,
+            isWeb: isWeb,
+            forEncoding: false,
+          );
   }
 
   void setImage(Object image) {
@@ -72,7 +73,7 @@ class _DecodeImageState extends State<DecodeImage> {
     setState(() {
       imageSelected = true;
       imageEncoded = false;
-      encodedImageBytes = null;
+      encodedTextFileBytes = null;
     });
   }
 
@@ -104,17 +105,17 @@ class _DecodeImageState extends State<DecodeImage> {
       ),
       child: kIsWeb
           ? Image.asset(
-        "assets/images/16b.png",
-        height: 300,
-        width: 300,
-        fit: BoxFit.contain,
-      )
+              "assets/images/16b.png",
+              height: 300,
+              width: 300,
+              fit: BoxFit.contain,
+            )
           : Image.file(
-        pickedImage!,
-        height: 300,
-        width: 300,
-        fit: BoxFit.fill,
-      ),
+              pickedImage!,
+              height: 300,
+              width: 300,
+              fit: BoxFit.fill,
+            ),
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,22 +159,51 @@ class _DecodeImageState extends State<DecodeImage> {
           style: TextStyle(fontSize: 18),
         ),
         const SizedBox(height: 20),
-        Container(
-          width: 500,
-          height: 300,
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.white,
-              width: 2.0,
+        Stack(
+          children: [
+            Container(
+              width: 500,
+              height: 300,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: SingleChildScrollView(
+                child: SelectableText(
+                  decodedText,
+                ),
+              ),
             ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: SingleChildScrollView(
-            child: Text(
-              decodedText,
-            ),
-          ),
+            Positioned(
+              bottom: 15,
+              right: 15,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: decodedText));
+                    Appt.toast("Text copied successfully!",context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                    child: const Icon(
+                      Icons.paste,
+                      color: Colors.white,
+                      size: 23,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
         const SizedBox(height: 20),
         ElevatedButton.icon(
@@ -196,18 +226,4 @@ class _DecodeImageState extends State<DecodeImage> {
     );
   }
 
-  void createAndDownloadTextFile(String content) async {
-    String fileName = 'decoded_text.txt';
-
-    // Get the user's documents directory
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String filePath = '${documentsDirectory.path}/$fileName';
-
-    // Create the text file
-    File textFile = File(filePath);
-    await textFile.writeAsString(content);
-
-    // Open the share dialog to allow the user to download the file
-    await Share.shareFiles([filePath]);
-  }
 }

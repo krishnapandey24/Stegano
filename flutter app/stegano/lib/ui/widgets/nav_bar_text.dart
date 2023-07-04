@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:stegano/utils/download_utils.dart';
 
 import '../../utils/colors.dart';
 class NavBarText extends StatefulWidget {

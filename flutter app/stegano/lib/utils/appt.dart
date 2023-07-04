@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Appt {
   static bool isValidPassword(String password) {
-    if(password.length>30) return true;
+    if (password.length > 30) return true;
     return password.length > 7 &&
         password.length < 128 &&
         password.contains(RegExp(r'[a-z]')) &&
@@ -41,13 +42,32 @@ class Appt {
   }
 
   static void fileSizeOverflowDialog(BuildContext context) {
+    showAlertDialog(context, "File size must be less than 10MB");
+  }
+
+  static void showAlertDialog(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (_) {
-        return const AlertDialog(
-          title: Text("File size must be less than 10MB"),
+        return AlertDialog(
+          title: Text(message),
         );
       },
     );
+  }
+
+  static void toast(String message, BuildContext context) {
+    if (kIsWeb) {
+      showAlertDialog(context, message);
+    } else {
+      Fluttertoast.showToast(
+        backgroundColor: Colors.black.withOpacity(0.86),
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        fontSize: 16.0,
+      );
+    }
   }
 }
