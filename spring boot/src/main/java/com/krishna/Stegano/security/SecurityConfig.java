@@ -32,14 +32,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/api/app/**").authenticated()
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/api/login/**").permitAll()
-                                .anyRequest().authenticated())
+//                                .requestMatchers("/api/test/**").permitAll()
+//                                .requestMatchers("/api/login/**").permitAll()
+                                .anyRequest().permitAll()
+                                )
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
-
 
     }
 

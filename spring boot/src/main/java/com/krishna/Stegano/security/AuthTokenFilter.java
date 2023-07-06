@@ -2,8 +2,6 @@ package com.krishna.Stegano.security;
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,8 +22,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 
 public class AuthTokenFilter extends OncePerRequestFilter {
-    Map<String, Integer> accessAttemptsPerIp = new HashMap<>();
-
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -36,8 +32,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull  FilterChain filterChain) throws ServletException, IOException {
-        String ipAddress = request.getRemoteAddr();
-
         final String authHeader= request.getHeader(AUTHORIZATION);
         if(authHeader==null || !authHeader.startsWith("Bearer")){
             filterChain.doFilter(request,response);
@@ -55,7 +49,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            // Handle any exceptions if needed
+            e.printStackTrace();
         }
 
         filterChain.doFilter(request, response);

@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/app")
 public class SteganographyController {
     private final SteganographyService steganographyService;
     private final EncryptionService encryptionService;

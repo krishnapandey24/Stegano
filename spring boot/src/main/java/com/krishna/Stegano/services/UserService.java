@@ -14,14 +14,17 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        bCryptPasswordEncoder= new BCryptPasswordEncoder();
     }
 
     public void saveUser(User user){
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -32,6 +35,5 @@ public class UserService {
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
-
 
 }
