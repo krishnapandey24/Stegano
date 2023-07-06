@@ -1,8 +1,12 @@
 package com.krishna.Stegano.payloads;
 
+import lombok.Data;
+
+
+@Data
 public class DecodeResponse {
-    String originalString;
-    byte[] fileContent;
+    private String originalString;
+    private byte[] fileContent;
 
     public DecodeResponse(String originalString, byte[] fileContent) {
         this.originalString = originalString;

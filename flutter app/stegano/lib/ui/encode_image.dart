@@ -6,6 +6,8 @@ import 'package:stegano/ui/widgets/image_picker_container.dart';
 import 'package:stegano/ui/widgets/nav_bar.dart';
 import 'dart:io';
 
+
+import '../network/api_service.dart';
 import '../utils/appt.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
@@ -26,6 +28,7 @@ class _EncodeImageState extends State<EncodeImage> {
   bool encryptMessage = false;
   bool imageEncoded= false;
   Uint8List? encodedImageBytes;
+  final API api = API();
 
 
   @override
@@ -144,7 +147,13 @@ class _EncodeImageState extends State<EncodeImage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            print("start");
+            encodedImageBytes = await api.encodeImageForWeb(webImage, textController.text, false);
+            setState(() {
+              imageEncoded=true;
+            });
+          },
           style: ElevatedButton.styleFrom(
               shape: const StadiumBorder(),
               backgroundColor: kBlue,

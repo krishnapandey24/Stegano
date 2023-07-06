@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:stegano/utils/download_utils.dart';
 
+import '../../network/api_service.dart';
 import '../../utils/colors.dart';
 class NavBarText extends StatefulWidget {
   final String text;
@@ -29,7 +30,10 @@ class _NavBarTextState extends State<NavBarText> {
         _color = Colors.white;
       }),
       child: GestureDetector(
-        onTap: (){},
+        onTap: (){
+          API api = API();
+
+        },
         child: Text(
           widget.text,
           style:

@@ -1,23 +1,19 @@
 package com.krishna.Stegano.controllers;
 
-import com.krishna.Stegano.payloads.DecodeDTO;
 import com.krishna.Stegano.payloads.DecodeResponse;
-import com.krishna.Stegano.payloads.EncodeDTO;
+import com.krishna.Stegano.payloads.EncodeResponse;
 import com.krishna.Stegano.services.EncryptionService;
 import com.krishna.Stegano.services.SteganographyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 
-@Controller
-@RequestMapping("/api/app")
+@RestController
+@RequestMapping("/")
 public class SteganographyController {
     private final SteganographyService steganographyService;
     private final EncryptionService encryptionService;
@@ -29,23 +25,43 @@ public class SteganographyController {
         this.encryptionService = encryptionService;
     }
 
-    @PostMapping(value = "/encodeImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> encodeImage(@RequestBody EncodeDTO encodeDTO) {
-        try{
-            String message= encodeDTO.encryptMessage() ? encryptionService.encrypt(encodeDTO.getMessage(),encodeDTO.getEncryptionKey()) : encodeDTO.getMessage();
-            return ResponseEntity.ok(steganographyService.encodeImage(encodeDTO.getFile(),message));
-        }catch (Exception e){
+    @GetMapping("/test")
+    public String test() {
+        return "<b>Hello</b>";
+    }
+
+
+    @PostMapping(value = "/encodeImage")
+    public ResponseEntity<EncodeResponse> encodeImage(@RequestParam("file") MultipartFile file,
+                                                      @RequestParam("message") String message,
+                                                      @RequestParam("encryptMessage") boolean encryptMessage,
+                                                      @RequestParam(value = "encryptionKey", required = false) String encryptionKey
+    ) {
+
+        try {
+            message = encryptMessage ? encryptionService.encrypt(message, encryptionKey) : message;
+            byte[] fileBytes = steganographyService.encodeImage(file, message);
+            EncodeResponse encodeResponse = new EncodeResponse();
+            encodeResponse.setFileBytes(fileBytes);
+            return ResponseEntity.ok(encodeResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @PostMapping(value = "/decodeImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<DecodeResponse> decodeImage(@RequestBody DecodeDTO decodeDTO) {
-        try{
-            String data= steganographyService.decodeImage(decodeDTO.getFile());
-            if(decodeDTO.isEncrypted()) data= encryptionService.decrypt(data, decodeDTO.getEncryptionKey());
-            return ResponseEntity.ok(new DecodeResponse(data,data.getBytes(StandardCharsets.UTF_8)));
-        }catch (Exception e){
+    @PostMapping(value = "/decodeImage")
+    public ResponseEntity<DecodeResponse> decodeImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("isEncrypted") boolean isEncrypted,
+            @RequestParam(value = "encryptionKey", required = false) String encryptionKey
+    ) {
+        try {
+            String data = steganographyService.decodeImage(file);
+            if (isEncrypted) data = encryptionService.decrypt(data, encryptionKey);
+            return ResponseEntity.ok(new DecodeResponse(data, data.getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:stegano/utils/download_utils.dart';
 
 import '../utils/appt.dart';
 import '../utils/colors.dart';
@@ -86,8 +87,8 @@ class EncodeDownload extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white, width: 5),
             ),
-            child: Image.asset(
-              "assets/images/16b.png",
+            child: Image.memory(
+              fileBytes,
               height: 210,
               width: 210,
               fit: BoxFit.contain,
@@ -96,7 +97,7 @@ class EncodeDownload extends StatelessWidget {
           const SizedBox(height: 30),
           Center(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {DownloadUtils.downloadFileForWeb(fileBytes, "encoded_image.jpg");},
               style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),
                   backgroundColor: kBlue,
