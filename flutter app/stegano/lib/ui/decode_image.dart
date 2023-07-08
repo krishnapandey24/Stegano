@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:stegano/ui/widgets/image_picker_container.dart';
+import 'package:stegano/ui/widgets/decode_image_picker_container.dart';
 import 'package:stegano/ui/widgets/nav_bar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:stegano/utils/download_utils.dart';
+import '../model/decode_response.dart';
+import '../network/api_service.dart';
 import '../utils/appt.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
@@ -20,12 +22,21 @@ class DecodeImage extends StatefulWidget {
 class _DecodeImageState extends State<DecodeImage> {
   File? pickedImage;
   Uint8List webImage = Uint8List(8);
-  bool imageSelected = true;
-  final encryptionKeyController = TextEditingController();
+  bool imageSelected = false;
   bool messageIsEncrypted = false;
-  bool imageEncoded = false;
-  Uint8List? encodedTextFileBytes;
+  bool imageDecoded = false;
+  Uint8List? decodedTextFileBytes;
   String decodedText = subDescription * 10;
+  API api = API();
+
+  // @override
+  // void initState() async{
+  //   super.initState();
+  //   // bool userLoggedIn= await Appt.isLoggedIn();
+  //   // if(!userLoggedIn && mounted){
+  //   //   Navigator.pushReplacementNamed(context, '/signup');
+  //   // }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +45,7 @@ class _DecodeImageState extends State<DecodeImage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const NavBar(index: 8),
+            const NavBar(index: 8,atHome: false),
             ScreenTypeLayout.builder(
               desktop: (BuildContext context) => mainContainer(true),
               mobile: (BuildContext context) => mainContainer(false),
@@ -48,32 +59,27 @@ class _DecodeImageState extends State<DecodeImage> {
   mainContainer(bool isWeb) {
     return imageSelected
         ? imageSelectedLayout(isWeb)
-        : ImagePickerContainer(
+        : DecodeImagePickerContainer(
             setState: setImage,
             isWeb: isWeb,
-            forEncoding: false,
           );
   }
 
-  void setImage(Object image) {
-    if (kIsWeb) {
-      Uint8List imageBytes = image as Uint8List;
-      if (imageBytes.length > maxImageFileSize) {
-        Appt.fileSizeOverflowDialog(context);
-        return;
-      }
-      webImage = imageBytes;
-    } else {
-      if (pickedImage!.lengthSync() > maxImageFileSize) {
-        Appt.fileSizeOverflowDialog(context);
-        return;
-      }
-      pickedImage = image as File?;
+  void setImage(Uint8List imageBytes, bool isEncrypted, [String? decryptionKey]) async {
+    if (imageBytes.length > maxImageFileSize) {
+      Appt.fileSizeOverflowDialog(context);
+      return;
     }
+    webImage = imageBytes;
+    print("start");
+    DecodeResponse decodeResponse =
+        await api.decodeImage(webImage, isEncrypted, decryptionKey);
+
     setState(() {
       imageSelected = true;
-      imageEncoded = false;
-      encodedTextFileBytes = null;
+      imageDecoded = false;
+      decodedTextFileBytes = decodeResponse.byteData;
+      decodedText = decodeResponse.data;
     });
   }
 
@@ -104,8 +110,8 @@ class _DecodeImageState extends State<DecodeImage> {
         border: Border.all(color: Colors.white, width: 5),
       ),
       child: kIsWeb
-          ? Image.asset(
-              "assets/images/16b.png",
+          ? Image.memory(
+              webImage,
               height: 300,
               width: 300,
               fit: BoxFit.contain,
@@ -133,7 +139,12 @@ class _DecodeImageState extends State<DecodeImage> {
             if (image == null) {
               print("Image is null");
             } else {
-              setImage(image);
+              setState(() {
+                imageSelected=false;
+                webImage=Uint8List(8);
+                decodedText="";
+                decodedTextFileBytes=null;
+              });
             }
           },
           style: OutlinedButton.styleFrom(
@@ -186,7 +197,7 @@ class _DecodeImageState extends State<DecodeImage> {
                 child: GestureDetector(
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: decodedText));
-                    Appt.toast("Text copied successfully!",context);
+                    Appt.toast("Text copied successfully!", context);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
@@ -207,7 +218,10 @@ class _DecodeImageState extends State<DecodeImage> {
         ),
         const SizedBox(height: 20),
         ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: () {
+            DownloadUtils.downloadFileForWeb(
+                decodedTextFileBytes!, "decoded_text.txt");
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: kBlue,
             shape: const StadiumBorder(),
@@ -225,5 +239,4 @@ class _DecodeImageState extends State<DecodeImage> {
       ],
     );
   }
-
 }

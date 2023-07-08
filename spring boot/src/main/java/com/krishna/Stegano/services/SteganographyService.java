@@ -5,17 +5,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 @Service
 public class SteganographyService {
     public byte[] encodeImage(MultipartFile imageFile, String message) throws IOException {
         BufferedImage bufferedImage = getBufferedImage(imageFile);
-        String extension = getFileExtension(imageFile);
-        return hideMessage(message, bufferedImage, extension);
+        return hideMessage(message, bufferedImage);
     }
 
     public String decodeImage(MultipartFile imageFile) throws IOException {
@@ -29,18 +25,8 @@ public class SteganographyService {
         return ImageIO.read(inputStream);
     }
 
-    public String getFileExtension(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-        if (originalFilename != null) {
-            int extensionIndex = originalFilename.lastIndexOf(".");
-            if (extensionIndex != -1) {
-                return originalFilename.substring(extensionIndex + 1);
-            }
-        }
-        return "png";
-    }
 
-    public byte[] hideMessage(String message, BufferedImage image, String extension) throws IOException {
+    public byte[] hideMessage(String message, BufferedImage image) throws IOException {
         int messageLength = message.length();
         int[] bitLengthMessage = getBinaryArray(messageLength);
 
@@ -64,7 +50,7 @@ public class SteganographyService {
         }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, extension, baos);
+        ImageIO.write(image, "png", baos);
         baos.flush();
         byte[] byteArray = baos.toByteArray();
         baos.close();

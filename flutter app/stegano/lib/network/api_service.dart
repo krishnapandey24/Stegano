@@ -1,58 +1,61 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
-import "package:universal_html/html.dart" as html;
-
 import 'package:dio/dio.dart';
 
-import '../model/DecodeResponse.dart';
+import '../model/decode_response.dart';
 
 
 class API {
   late Dio dio;
 
   API() {
-    BaseOptions baseOptions = BaseOptions(baseUrl: 'http://localhost:8080/');
+    BaseOptions baseOptions = BaseOptions(baseUrl: 'http://localhost:8080/api/');
     dio = Dio(baseOptions);
   }
 
+  Future<String> login(String email, String password) async{
+    try{
+         Response response= await dio.post(
+           '/user/login',
+           data: {
+             "email" : email,
+             "password" : password
+           }
+         );
 
-
-  Future<Uint8List> encodeImageForWeb2(html.File file, String message, bool encryptMessage, [String? encryptionKey]) async {
-    try {
-      String encryptMessageParam = encryptMessage.toString();
-      FormData formData = FormData.fromMap({
-        'file' : file,
-        'message': message,
-        'encryptMessage': encryptMessageParam,
-        'encryptionKey': encryptionKey,
-      });
-
-
-      Response<Uint8List> response = await dio.post<Uint8List>(
-        '/encodeImage',
-        data: formData,
-        options: Options(responseType: ResponseType.bytes),
-      );
-      if(response.data==null) throw Exception('null');
-      return response.data!;
-    } catch (s,e) {
-      print(e);
-      print(s);
-      throw Exception('Failed to encode image');
+         return response.data;
+    }catch(e){
+      throw Exception(e);
     }
   }
 
-  Future<DecodeResponse> decodeImage(File file, bool isEncrypted, [String? encryptionKey]) async {
+  Future<String> register(String email, String password) async{
+    try{
+      Response response= await dio.post(
+          '/user/register',
+          data: {
+            "email" : email,
+            "password" : password
+          }
+      );
+
+      return response.data;
+    }catch(e){
+      throw Exception(e);
+    }
+  }
+
+
+  Future<DecodeResponse> decodeImage(Uint8List fileBytes, bool encryptMessage,[String? encryptionKey]) async {
     try {
       FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(file.path),
-        'isEncrypted': isEncrypted.toString(),
+        'file': MultipartFile.fromBytes(fileBytes, filename: 'file.jpg'),
+        'isEncrypted': encryptMessage,
         'encryptionKey': encryptionKey,
       });
 
       Response response = await dio.post(
-        '/decodeImage',
+        '/app/decodeImage',
         data: formData,
       );
 
@@ -67,16 +70,17 @@ class API {
 
 
 
-  Future<Uint8List> encodeImageForWeb(Uint8List fileBytes, String message, bool encryptMessage) async {
+  Future<Uint8List> encodeImageForWeb(Uint8List fileBytes, String message, bool encryptMessage,[String? encryptionKey]) async {
     try {
       FormData formData = FormData.fromMap({
         'message': message,
         'encryptMessage': false,
         'file': MultipartFile.fromBytes(fileBytes, filename: 'file.jpg'),
+        'encryptionKey': encryptionKey,
       });
 
       Response response = await dio.post(
-        '/encodeImage',
+        '/app/encodeImage',
         data: formData,
       );
 

@@ -1,8 +1,9 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:stegano/utils/mobile_login_utils.dart';
+import 'package:stegano/utils/web_login_utils.dart';
 
 class Appt {
   static bool isValidPassword(String password) {
@@ -21,8 +22,7 @@ class Appt {
     return regExp.hasMatch(email);
   }
 
-  static Future<Object?> pickImage() async {
-    if (kIsWeb) {
+  static Future<Uint8List?> pickImage() async {
       final ImagePicker picker = ImagePicker();
       final image = await picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
@@ -30,15 +30,6 @@ class Appt {
       } else {
         return null;
       }
-    } else {
-      final ImagePicker picker = ImagePicker();
-      final image = await picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        return File(image.path);
-      } else {
-        return null;
-      }
-    }
   }
 
   static void fileSizeOverflowDialog(BuildContext context) {
@@ -68,6 +59,14 @@ class Appt {
         timeInSecForIosWeb: 1,
         fontSize: 16.0,
       );
+    }
+  }
+
+  static Future<bool> isLoggedIn() async {
+    if(kIsWeb){
+      return WebLoginUtils.isLoggedIn();
+    }else{
+      return MobileLoginUtils.isLoggedIn();
     }
   }
 }

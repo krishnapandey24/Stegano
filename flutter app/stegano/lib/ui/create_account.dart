@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:stegano/utils/colors.dart';
+import 'package:stegano/utils/mobile_login_utils.dart';
 import 'package:stegano/utils/styles.dart';
 
+import '../network/api_service.dart';
 import '../utils/appt.dart';
 import '../utils/constants.dart';
+import '../utils/web_login_utils.dart';
 
 class CreateAccount extends StatefulWidget {
   final bool? toEncode;
@@ -25,6 +28,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final _passwordController = TextEditingController();
   Color _hoverColorForAlterForText1 = Colors.grey.shade400;
   Color _hoverColorForAlterForText2 = Colors.white;
+  final API api= API();
 
 
   @override
@@ -155,16 +159,20 @@ class _CreateAccountState extends State<CreateAccount> {
                 backgroundColor: kBlue,
                 padding: const EdgeInsets.all(20),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   String email = _emailController.text;
                   String password = _passwordController.text;
-                  print("$email $password");
+                  String jwtToken;
                   if (forSignUp) {
-                  } else {}
+                    jwtToken=await api.register(email, password);
+                  } else {
+                    jwtToken= await api.login(email, password);
+                  }
+                  storeJwtToken(jwtToken, isWeb);
                   _emailController.clear();
                   _passwordController.clear();
-                  Navigator.of(context, rootNavigator: true).pushNamed(widget.toEncode!  ? '/encode' : '/decode');
+                  if(mounted) Navigator.of(context, rootNavigator: true).pushNamed(widget.toEncode!  ? '/encode' : '/decode');
                 }
               },
               child: Text(
@@ -243,5 +251,13 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ],
     );
+  }
+
+  void storeJwtToken(String jwtToken, bool isWeb){
+    if(isWeb){
+      WebLoginUtils.storeToken(jwtToken);
+    }else{
+      MobileLoginUtils.storeToken(jwtToken);
+    }
   }
 }

@@ -9,7 +9,10 @@ import 'nav_bar_text.dart';
 
 class NavBar extends StatefulWidget {
   final int index;
-  const NavBar({Key? key, required this.index}) : super(key: key);
+  final bool atHome;
+
+  const NavBar({Key? key, required this.index, required this.atHome})
+      : super(key: key);
 
   @override
   State<NavBar> createState() => _NavBarState();
@@ -27,19 +30,33 @@ class _NavBarState extends State<NavBar> {
   AppBar mobileNavBar() {
     return AppBar(
       leading: Center(
-        child: SvgPicture.asset(
-          "assets/icons/logo.svg",
-          height: 30,
-          width: 30,
-          colorFilter: const ColorFilter.mode(
-            Colors.white,
-            BlendMode.srcIn,
+        child: GestureDetector(
+          onTap: () {
+            if (!widget.atHome) {
+              Navigator.of(context, rootNavigator: true).pushNamed('/');
+            }
+          },
+          child: SvgPicture.asset(
+            "assets/icons/logo.svg",
+            height: 30,
+            width: 30,
+            colorFilter: const ColorFilter.mode(
+              Colors.white,
+              BlendMode.srcIn,
+            ),
           ),
         ),
       ),
-      title: const Text(
-        appName,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      title: GestureDetector(
+        onTap: () {
+          if (!widget.atHome) {
+            Navigator.of(context, rootNavigator: true).pushNamed('/');
+          }
+        },
+        child: const Text(
+          appName,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       actions: [
         GestureDetector(
@@ -58,19 +75,29 @@ class _NavBarState extends State<NavBar> {
       margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 25),
       child: Row(
         children: [
-          SvgPicture.asset(
-            "assets/icons/logo.svg",
-            height: 60,
-            width: 60,
-            colorFilter: const ColorFilter.mode(
-              Colors.white,
-              BlendMode.srcIn,
+          GestureDetector(
+            onTap: () => Navigator.of(context, rootNavigator: true).pushNamed(
+              '/',
             ),
-          ),
-          const SizedBox(width: 30),
-          const Text(
-            appName,
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  "assets/icons/logo.svg",
+                  height: 60,
+                  width: 60,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: 30),
+                const Text(
+                  appName,
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
           const Spacer(),
           ...navBarTexts()
@@ -79,8 +106,8 @@ class _NavBarState extends State<NavBar> {
     );
   }
 
-  List<Widget> navBarTexts(){
-    List<Widget> navBarTexts= [
+  List<Widget> navBarTexts() {
+    List<Widget> navBarTexts = [
       const NavBarText(text: "How it works?"),
       const SizedBox(width: 20),
       const NavBarText(text: "About"),
@@ -95,7 +122,7 @@ class _NavBarState extends State<NavBar> {
         padding: 20,
       )
     ];
-    if(widget.index==10) return navBarTexts;
+    if (widget.index == 10) return navBarTexts;
     navBarTexts.removeAt(widget.index);
     return navBarTexts;
   }

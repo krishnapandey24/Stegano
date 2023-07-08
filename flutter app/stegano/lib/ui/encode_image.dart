@@ -32,6 +32,15 @@ class _EncodeImageState extends State<EncodeImage> {
 
 
   @override
+  void initState() {
+    super.initState();
+    // bool userLoggedIn= await Appt.isLoggedIn();
+    // if(!userLoggedIn && mounted){
+    //   Navigator.pushReplacementNamed(context, '/signup');
+    // }
+  }
+
+  @override
   void dispose() {
     super.dispose();
     textController.dispose();
@@ -45,7 +54,7 @@ class _EncodeImageState extends State<EncodeImage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const NavBar(index: 8),
+            const NavBar(index: 8,atHome: false),
             ScreenTypeLayout.builder(
               desktop: (BuildContext context) => mainContainer(true),
               mobile: (BuildContext context) => mainContainer(false),
@@ -65,7 +74,6 @@ class _EncodeImageState extends State<EncodeImage> {
           : ImagePickerContainer(
         setState: setImage,
         isWeb: isWeb,
-        forEncoding: true,
       );
     }
 

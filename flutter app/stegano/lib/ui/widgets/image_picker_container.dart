@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../utils/appt.dart';
@@ -5,24 +7,23 @@ import '../../utils/colors.dart';
 import '../../utils/constants.dart';
 
 class ImagePickerContainer extends StatelessWidget {
-  final Function(Object image) setState;
+  final Function(Uint8List image) setState;
   final bool isWeb;
-  final bool forEncoding;
 
   const ImagePickerContainer(
-      {super.key, required this.setState, required this.isWeb, required this.forEncoding});
+      {super.key, required this.setState, required this.isWeb});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: isWeb ? (width! * (forEncoding ? 0.32 : 0.29)) : 50),
+      margin: EdgeInsets.symmetric(horizontal: isWeb ? (width! * (0.32)) : 50),
       child: Column(
         children: [
           const SizedBox(height: 20),
-          Text(
-            "Upload your image to ${forEncoding ? "hide text in it": "decode it"}",
+          const Text(
+            "Upload your image to hide text in it",
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 50),
           Container(
