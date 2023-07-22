@@ -1,4 +1,4 @@
-# Steganography Application using LSB Steganography
+# Stegano - Steganography Application using LSB Steganography
 
 ## Table of Contents
 
@@ -8,7 +8,7 @@
 - [How to Use](#how-to-use)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
-- 
+
 ## Introduction
 
 📝 Steganography is the art of concealing information within a carrier medium, such as an image, audio, or video file, without attracting attention. The Least Significant Bit (LSB) steganography is a common technique where the least significant bit of each pixel in an image is replaced with bits of the secret message.
@@ -55,7 +55,7 @@ Our steganography application provides a user-friendly interface for users to hi
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/steganography-app.git
+git clone https://github.com/krishnapandey24/stegano.git
 cd steganography-app
 ```
 
@@ -103,7 +103,7 @@ cd backend
 
 🤝 Welcome contributors and explain how others can contribute to your project. You can provide guidelines for raising issues, creating pull requests, and setting up the development environment.
 
-We welcome contributions from the community to enhance the functionality of our steganography application. To contribute, follow these steps:
+I welcome contributions from the community to enhance the functionality of our steganography application. To contribute, follow these steps:
 
 1. Fork the repository and create a new branch.
 2. Make changes and test them thoroughly.
@@ -111,12 +111,5 @@ We welcome contributions from the community to enhance the functionality of our 
 4. Push your changes to your forked repository.
 5. Create a pull request detailing the changes you made.
 
-We appreciate your contributions and will review your pull requests as soon as possible.
+I appreciate your contributions and will review your pull requests as soon as possible.
 
-## Acknowledgments
-
-🙏 Show your gratitude to any third-party libraries, tools, or resources you used in your project. You can also thank any contributors or inspirations here.
-
-- Acknowledge any libraries or frameworks you used.
-- Thank any contributors who helped develop the application.
-- Mention any tutorials or resources that inspired your work.
