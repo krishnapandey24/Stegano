@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.charset.StandardCharsets;
 
 
+
 @RestController
 @RequestMapping("/api/app")
 public class SteganographyController {
@@ -41,6 +42,7 @@ public class SteganographyController {
         try {
             message = encryptMessage ? encryptionService.encrypt(message, encryptionKey) : message;
             byte[] fileBytes = steganographyService.encodeImage(file, message);
+
             EncodeResponse encodeResponse = new EncodeResponse();
             encodeResponse.setFileBytes(fileBytes);
             return ResponseEntity.ok(encodeResponse);
@@ -65,5 +67,6 @@ public class SteganographyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }

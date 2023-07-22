@@ -57,7 +57,6 @@ public class SteganographyService {
 
         return byteArray;
     }
-
     private int[] getBinaryArray(int value) {
         int[] binaryArray = new int[8];
         StringBuilder binaryString = new StringBuilder(Integer.toBinaryString(value));
