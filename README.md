@@ -36,12 +36,6 @@ Our steganography application provides a user-friendly interface for users to hi
 - Spring Boot: Backend framework for Java applications.
 - PostgreSQL: Open-source relational database management system.
 
-## Hosted on Microsoft Azure
-
-🌐 Our Steganography Application is hosted on Microsoft Azure. You can access it using the following URL:
-
-[https://steganoapp.azurewebsites.net/](https://steganoapp.azurewebsites.net/)
-
 ## How to Use
 
 ### Prerequisites
