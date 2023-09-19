@@ -81,16 +81,21 @@ cd backend
 
 🖼️ **Screenshot 1**: Landing Page - The home page where users can get started.
 
-![Landing Page](https://github.com/krishnapandey24/Stegano/assets/80609574/da191994-0da3-4200-915e-a59c507c808a)
+![Landing Page](https://github.com/krishnapandey24/Stegano/assets/80609574/a8dde309-2e79-4526-a072-eba758e43479)
 
 🖼️ **Screenshot 2**: Encode Text - Interface for users to hide text inside images.
 
-![Encode Text](https://github.com/krishnapandey24/Stegano/assets/80609574/eb2f637f-80b6-4c06-8233-9613215a4054)
+![Screenshot (14)](https://github.com/krishnapandey24/Stegano/assets/80609574/c6130a95-2ce8-49bd-a81e-2f0e09c3e35c)
 
 
 🖼️ **Screenshot 3**: Decode Image - Interface for users to decode text from encoded images.
 
-![Decode Image](https://github.com/krishnapandey24/Stegano/assets/80609574/e726c84f-901c-4bda-ac2e-5a3deed855ce)
+![Screenshot (19)](https://github.com/krishnapandey24/Stegano/assets/80609574/f398ea7c-d745-4af4-ace2-96b93dc0093a)
+
+🖼️ **Screenshot 4**: Decoded Image - Interface for users to see decoded text from encoded image after decoding it.
+
+![Screenshot (17)](https://github.com/krishnapandey24/Stegano/assets/80609574/f3837fdc-4d9e-4ef1-8f99-e5fe73c6dca8)
+
 
 
 ## Contributing
